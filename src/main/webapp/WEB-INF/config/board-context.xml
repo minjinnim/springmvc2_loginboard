@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+<context:component-scan base-package="board.controller,board.service,board.dao,board.vo"></context:component-scan>
+<context:annotation-config></context:annotation-config>
+<beans:bean id="viewResolver" 
+class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<beans:property name="prefix" value="/WEB-INF/view/home/"></beans:property>
+<beans:property name="suffix" value=".jsp"></beans:property>
+</beans:bean>
+
+
+<!-- 로그인여부AOP구성 -->
+<beans:bean id="loginadvice" class="advice.LoginAdvice"/>
+<aop:config>
+	<aop:aspect ref="loginadvice">
+		<aop:pointcut id="pointcut" expression="execution(public * board.controller.BoardController.list(..))"/>
+		<aop:around method="loginCheck" pointcut-ref="pointcut"/>
+	</aop:aspect>
+</aop:config>
+
+</beans:beans>
